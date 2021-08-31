@@ -1,0 +1,22 @@
+GET http://localhost:3001/todos
+###
+GET http://localhost:3001/todos/3
+###
+POST http://localhost:3001/todos HTTP/1.1
+content-type: application/json
+
+{
+    "text": "sample_04"
+}
+###
+
+PUT http://localhost:3001/todos/14 HTTP/1.1
+content-type: application/json
+
+{
+    "done": true
+}
+
+###
+DELETE http://localhost:3001/todos/7
+###
