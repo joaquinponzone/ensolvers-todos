@@ -3,18 +3,20 @@ import { observer } from "mobx-react";
 import store from "../store";
 import {
   Typography,
-  Button,
-  Checkbox,
-  Grid,
-  Input,
   Divider,
   Theme,
   createStyles,
   makeStyles,
+  ListItem,
+  Button,
+  List,
+  ListItemSecondaryAction,
 } from "@material-ui/core";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditIcon from "@material-ui/icons/Edit";
-import { useState } from "react";
+import EditTodo from "./EditTodo";
+import { Checkbox } from "@material-ui/core";
+import { Todo } from "../types/interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,88 +28,75 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "100%",
     },
     text: {
-      display: "flex",
-      maxWidth: "80%",
+      maxWidth: "400px",
       [theme.breakpoints.down("xs")]: {
-        padding: "0",
-        width: "120px",
+        maxWidth: "100px",
       },
-    },
-    actions: {
-      display: "flex",
     },
   })
 );
 
 function TodoListItems() {
   const classes = useStyles();
-  const [openEdit, setOpenEdit] = useState(false);
+  const [openEditModal, setOpenEditModal] = React.useState(false);
+  const [itemToEdit, setItemToEdit] = React.useState<Todo>({
+    id: 0,
+    text: "",
+    done: false,
+  });
+
+  const handleComplete = (evt: React.MouseEvent, todo: Todo) => {
+    store.toggleDone(todo);
+  };
 
   React.useEffect(() => {
     store.loadTodos();
   }, []);
 
   return (
-    <Grid container spacing={2} justifyContent='center' alignItems='center'>
-      {store.todos.length > 0 ? (
+    <List>
+      {store.todos.length ? (
         store.todos?.map((todo) => (
-          <Grid container key={todo.id} className={classes.todoList}>
-            <Grid item>
-              <Checkbox
+          <ListItem>
+            <Checkbox
+              color='primary'
+              onClick={(evt) => handleComplete(evt, todo)}
+              checked={todo.done}
+            />
+            <Typography noWrap className={classes.text}>
+              {todo.text}
+            </Typography>
+            <ListItemSecondaryAction>
+              <Button
                 onClick={(evt) => {
                   evt.preventDefault();
-                  store.toggleDone(todo);
+                  setItemToEdit(todo);
+                  setOpenEditModal(true);
                 }}
-                checked={todo.done}
-              />
-            </Grid>
-            <Grid item className={classes.text}>
-              <Input
-                value={todo.text}
-                onChange={(evt) => {
-                  todo.text = evt.target.value;
-                }}
-                disableUnderline={!openEdit}
-                readOnly={!openEdit}
-              />
-            </Grid>
-            <Grid item className={classes.actions}>
-              {openEdit ? (
-                <Button
-                  onClick={(evt) => {
-                    evt.preventDefault();
-                    store.editTodo(todo);
-                    store.loadTodos();
-                    setOpenEdit(!openEdit);
-                  }}
-                >
-                  Save
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => {
-                    setOpenEdit(!openEdit);
-                  }}
-                >
-                  <EditIcon />
-                </Button>
-              )}
+              >
+                <EditIcon color='secondary' />
+              </Button>
               <Button
                 onClick={() => {
                   store.removeTodo(todo.id);
                 }}
               >
-                <DeleteForeverIcon />
+                <DeleteForeverIcon color='error' />
               </Button>
-            </Grid>
-          </Grid>
+            </ListItemSecondaryAction>
+          </ListItem>
         ))
       ) : (
-        <Grid container className={classes.todoList}>
+        <ListItem className={classes.todoList}>
           <div className={classes.title}>No todos to Display</div>
-        </Grid>
+        </ListItem>
       )}
-    </Grid>
+      <EditTodo
+        item={itemToEdit}
+        open={openEditModal}
+        setOpenEditModal={setOpenEditModal}
+      />
+    </List>
   );
 }
 
@@ -119,7 +108,7 @@ function TodoList() {
   return (
     <>
       <Typography variant={"h4"} className={classes.title}>
-        To-do List
+        To-Do List
       </Typography>
       <Divider />
       <ObservedTodoListItems />

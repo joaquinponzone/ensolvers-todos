@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "center",
       alignItems: "center",
       padding: "3rem",
-      width: "700px",
       [theme.breakpoints.down("xs")]: {
         padding: "0",
         width: "320px",
@@ -32,7 +31,7 @@ export function App() {
   return (
     <>
       <CssBaseline />
-      <Container maxWidth='md' className={classes.root}>
+      <Container maxWidth='lg' className={classes.root}>
         <Paper>
           <Grid container spacing={0}>
             <Grid item xs={12}>

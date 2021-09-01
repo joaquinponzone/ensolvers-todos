@@ -70,7 +70,7 @@ class Todos {
     axios
       .put(`http://localhost:3001/todos/${todo.id}`, { done: !todo.done })
       .then(() => {
-        this.todos = toggleDone(this.todos, todo);
+        this.todos = toggleDone(this.todos, { ...todo, done: !todo.done });
       })
       .catch((err) => console.log(err));
   }
