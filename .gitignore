@@ -1,4 +1,7 @@
+.DS_Store
 node_modules
 .env
-package.json
-.DS_Store
+api/dist
+api/package-lock.json
+client/package-lock.json
+
