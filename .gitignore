@@ -1,4 +1,5 @@
+.DS_Store
 node_modules
 .env
-package.json
-.DS_Store
+api/dist/tsconfig.build.tsbuildinfo
+api/package-lock.json
