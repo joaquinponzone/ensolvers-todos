@@ -27,8 +27,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     text: {
       display: "flex",
-      width: "90%",
       maxWidth: "80%",
+      [theme.breakpoints.down("xs")]: {
+        padding: "0",
+        width: "120px",
+      },
     },
     actions: {
       display: "flex",
@@ -46,59 +49,64 @@ function TodoListItems() {
 
   return (
     <Grid container spacing={2} justifyContent='center' alignItems='center'>
-      {store.todos?.map((todo) => (
-        <Grid container key={todo.id} className={classes.todoList}>
-          <Grid item>
-            <Checkbox
-              onClick={(evt) => {
-                evt.preventDefault();
-                store.toggleDone(todo);
-              }}
-              checked={todo.done}
-            />
-          </Grid>
-          <Grid item className={classes.text}>
-            <Input
-              fullWidth
-              value={todo.text}
-              onChange={(evt) => {
-                todo.text = evt.target.value;
-              }}
-              disableUnderline={!openEdit}
-              readOnly={!openEdit}
-            />
-          </Grid>
-          <Grid item className={classes.actions}>
-            {openEdit ? (
-              <Button
+      {store.todos.length > 0 ? (
+        store.todos?.map((todo) => (
+          <Grid container key={todo.id} className={classes.todoList}>
+            <Grid item>
+              <Checkbox
                 onClick={(evt) => {
                   evt.preventDefault();
-                  store.editTodo(todo);
-                  store.loadTodos();
-                  setOpenEdit(!openEdit);
+                  store.toggleDone(todo);
                 }}
-              >
-                Save
-              </Button>
-            ) : (
+                checked={todo.done}
+              />
+            </Grid>
+            <Grid item className={classes.text}>
+              <Input
+                value={todo.text}
+                onChange={(evt) => {
+                  todo.text = evt.target.value;
+                }}
+                disableUnderline={!openEdit}
+                readOnly={!openEdit}
+              />
+            </Grid>
+            <Grid item className={classes.actions}>
+              {openEdit ? (
+                <Button
+                  onClick={(evt) => {
+                    evt.preventDefault();
+                    store.editTodo(todo);
+                    store.loadTodos();
+                    setOpenEdit(!openEdit);
+                  }}
+                >
+                  Save
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    setOpenEdit(!openEdit);
+                  }}
+                >
+                  <EditIcon />
+                </Button>
+              )}
               <Button
                 onClick={() => {
-                  setOpenEdit(!openEdit);
+                  store.removeTodo(todo.id);
                 }}
               >
-                <EditIcon />
+                <DeleteForeverIcon />
               </Button>
-            )}
-            <Button
-              onClick={() => {
-                store.removeTodo(todo.id);
-              }}
-            >
-              <DeleteForeverIcon />
-            </Button>
+            </Grid>
           </Grid>
+        ))
+      ) : (
+        <Grid container className={classes.todoList}>
+          <div className={classes.title}>No todos to Display</div>
         </Grid>
-      ))}
+      )}
     </Grid>
   );
 }

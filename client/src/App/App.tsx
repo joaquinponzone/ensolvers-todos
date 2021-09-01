@@ -18,8 +18,10 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "center",
       alignItems: "center",
       padding: "3rem",
+      width: "700px",
       [theme.breakpoints.down("xs")]: {
         padding: "0",
+        width: "320px",
       },
     },
   })

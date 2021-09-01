@@ -6,20 +6,21 @@ import { Button, Grid, TextField } from "@material-ui/core";
 function TodoAdd() {
   return (
     <Grid style={{ padding: "1rem" }} container justifyContent='center'>
-      <TextField
-        value={store.newTodo}
-        onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
-          (store.newTodo = evt.target.value)
-        }
-        placeholder='New todo'
-      />
-      <Button
-        onClick={() => {
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
           store.addTodo({ text: store.newTodo, done: false });
         }}
       >
-        Add Todo
-      </Button>
+        <TextField
+          value={store.newTodo}
+          onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
+            (store.newTodo = evt.target.value)
+          }
+          placeholder='New todo'
+        />
+        <Button type='submit'>Add Todo</Button>
+      </form>
     </Grid>
   );
 }
